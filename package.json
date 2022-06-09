@@ -1,0 +1,15 @@
+{
+  "name": "f-daily-report",
+  "version": "2.0.0",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "main": "main.js",
+  "author": "anonymous",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "crypto-js": "^4.1.1",
+    "selenium-webdriver": "^4.1.1"
+  }
+}
