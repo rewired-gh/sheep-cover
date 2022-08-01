@@ -75,14 +75,7 @@ const config = require("./config.js");
 
       // Set 当前状态 with DOM
       if (config.enableSetCurrentStatus) {
-        await driver.executeScript(
-          `document.querySelector('#dqzt').value = '${
-            statusMap[config.statusCode]
-          }';
-          document.querySelector("#dqzt").attributes["data-action"].value = '${
-            config.statusCode
-          }';`
-        );
+        await driver.executeScript(setCurrentStatus, statusMap[config.statusCode], config.statusCode);
       }
 
       // Set 所在地点 by clicking
@@ -169,4 +162,31 @@ function setGeolocation(geolocation) {
       $("#kzl1-btwzyy-div").hide();
     }
   }
+}
+
+function setCurrentStatus(statusCode, statusText) {
+  const waitForElm = (selector) => {
+    return new Promise(resolve => {
+      if (document.querySelector(selector)) {
+        return resolve(document.querySelector(selector));
+      }
+
+      const observer = new MutationObserver(mutations => {
+        if (document.querySelector(selector)) {
+          resolve(document.querySelector(selector));
+          observer.disconnect();
+        }
+      });
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    });
+  }
+
+  waitForElm('#dqzt').then(() => {
+    document.querySelector('#dqzt').value = `${statusText}`;
+    document.querySelector('#dqzt').attributes["data-action"].value = `${statusCode}`;
+  });
 }
